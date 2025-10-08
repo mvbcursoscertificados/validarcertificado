@@ -59,7 +59,7 @@
                                     <!-- Resultado escondido -->
                                     <div id="resultado" class="col-12 col-md-8 col-lg-7 mt-4 card d-none">
                                         <div class="card-body text-center text-dark">
-                                            <i class="fa fa-check text-success fa-7x"></i>
+                                            <i id="icone" class="fa fa-check text-success fa-7x"></i>
                                             <p class="mb-0 text-uppercase fs-4" id="mensagem">Certificado válido!</p>
                                             <hr class="my-4">
                                             <ul class="list-unstyled" id="detalhes">
@@ -78,23 +78,53 @@
     </div>
 
 <script>
-// Nome fixo
-const nomeAluno = "Samuel Santos de Sousa";
-// Lista de códigos válidos para esse aluno
-const codigosValidos = ["08313654392", "1731251567101443/24", "1731252567101443/24", "1731253567101443/24"];
+// 🔹 Lista de alunos e seus respectivos códigos válidos
+const alunos = {
+    "Samuel Santos de Sousa": [
+        "08313654392",
+        "1731251567101443/24",
+        "1731252567101443/24",
+        "1731253567101443/24"
+    ],
+    "Joedson de Oliveira Silva": [
+        "81300662204",
+        "1731240567101413/24"
+    ]
+};
 
+// 🔹 Função principal
 function mostrarResultado() {
     const input = document.getElementById("search").value.trim();
     const resultado = document.getElementById("resultado");
     const detalhes = document.getElementById("detalhes");
+    const icone = document.getElementById("icone");
+    const mensagem = document.getElementById("mensagem");
 
-    if (codigosValidos.includes(input)) {
+    let nomeEncontrado = null;
+
+    // Procura o código em todos os alunos
+    for (const [nome, codigos] of Object.entries(alunos)) {
+        if (codigos.includes(input)) {
+            nomeEncontrado = nome;
+            break;
+        }
+    }
+
+    // Data atual automática
+    const dataAtual = new Date().toLocaleDateString("pt-BR");
+
+    // Exibição dos resultados
+    if (nomeEncontrado) {
+        icone.className = "fa fa-check text-success fa-7x";
+        mensagem.textContent = "Certificado válido!";
         detalhes.innerHTML = `
-            <li>Nome: <strong>${nomeAluno}</strong></li>
-            <li>Gerado em: <strong>10/11/2024</strong></li>
+            <li>✅ Nome: <strong>${nomeEncontrado}</strong></li>
+            <li>Gerado em: <strong>${dataAtual}</strong></li>
             <li>Código: <strong>${input}</strong></li>
         `;
     } else {
+        icone.className = "fa fa-times text-danger fa-7x";
+        mensagem.textContent = "Certificado inválido!";
         detalhes.innerHTML = `
             <li>❌ Código não encontrado.</li>
         `;
